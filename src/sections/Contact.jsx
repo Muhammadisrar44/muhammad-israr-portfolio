@@ -7,101 +7,99 @@ function Contact() {
 
   const whatsappUrl = 'https://wa.me/' + profile.whatsapp
 
- async function handleSubmit(event) {
-  event.preventDefault()
+  async function handleSubmit(event) {
+    event.preventDefault()
 
-  const form = event.currentTarget
-  const formData = new FormData(form)
-const honeypot = String(formData.get('_gotcha') || '').trim()
-formData.set('name', name)
-formData.set('email', email)
-formData.set('subject', subject)
-formData.set('message', message)
-if (honeypot) {
-  setFormStatus('Something went wrong. Please try again.')
-  return
-}
-  const name = String(formData.get('name') || '').trim()
-  const email = String(formData.get('email') || '').trim()
-  const subject = String(formData.get('subject') || '').trim()
-  const message = String(formData.get('message') || '').trim()
-
-  // Client-side validation
-  if (
-    name.length < 2 ||
-    name.length > 80 ||
-    subject.length < 3 ||
-    subject.length > 120 ||
-    message.length < 10 ||
-    message.length > 2000
-  ) {
-    setFormStatus(
-      'Please check your information and message length.',
-    )
-    return
-  }
-
-  // Basic email validation
-  const emailPattern =
-    /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i
-
-  if (
-    email.length > 120 ||
-    !emailPattern.test(email)
-  ) {
-    setFormStatus(
-      'Please enter a valid email address.',
-    )
-    return
-  }
-
-  // Reject control characters that should never be submitted
-  const containsUnsafeControlChars =
-    /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(
-      `${name}${email}${subject}${message}`,
-    )
-
-  if (containsUnsafeControlChars) {
-    setFormStatus(
-      'Your message contains unsupported characters.',
-    )
-    return
-  }
-
-  setIsSubmitting(true)
-  setFormStatus('')
-
-  try {
-    const response = await fetch(
-      'https://formspree.io/f/xwlplogz',
-      {
-        method: 'POST',
-        body: formData,
-        headers: {
-          Accept: 'application/json',
-        },
-      },
-    )
-
-    if (response.ok) {
-      form.reset()
-
-      setFormStatus(
-        'Thank you. Your message has been sent successfully.',
-      )
-    } else {
-      setFormStatus(
-        'Something went wrong. Please try again.',
-      )
+    const form = event.currentTarget
+    const formData = new FormData(form)
+    
+    const honeypot = String(formData.get('_gotcha') || '').trim()
+    if (honeypot) {
+      setFormStatus('Something went wrong. Please try again.')
+      return
     }
-  } catch {
-    setFormStatus(
-      'Unable to send your message right now. Please try again later.',
-    )
-  } finally {
-    setIsSubmitting(false)
+
+    const name = String(formData.get('name') || '').trim()
+    const email = String(formData.get('email') || '').trim()
+    const subject = String(formData.get('subject') || '').trim()
+    const message = String(formData.get('message') || '').trim()
+
+    // Client-side validation
+    if (
+      name.length < 2 ||
+      name.length > 80 ||
+      subject.length < 3 ||
+      subject.length > 120 ||
+      message.length < 10 ||
+      message.length > 2000
+    ) {
+      setFormStatus(
+        'Please check your information and message length.',
+      )
+      return
+    }
+
+    // Basic email validation
+    const emailPattern =
+      /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i
+
+    if (
+      email.length > 120 ||
+      !emailPattern.test(email)
+    ) {
+      setFormStatus(
+        'Please enter a valid email address.',
+      )
+      return
+    }
+
+    // Reject control characters that should never be submitted
+    const containsUnsafeControlChars =
+      /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(
+        `${name}${email}${subject}${message}`,
+      )
+
+    if (containsUnsafeControlChars) {
+      setFormStatus(
+        'Your message contains unsupported characters.',
+      )
+      return
+    }
+
+    setIsSubmitting(true)
+    setFormStatus('')
+
+    try {
+      const response = await fetch(
+        'https://formspree.io/f/xwlplogz',
+        {
+          method: 'POST',
+          body: formData,
+          headers: {
+            Accept: 'application/json',
+          },
+        },
+      )
+
+      if (response.ok) {
+        form.reset()
+
+        setFormStatus(
+          'Thank you. Your message has been sent successfully.',
+        )
+      } else {
+        setFormStatus(
+          'Something went wrong. Please try again.',
+        )
+      }
+    } catch {
+      setFormStatus(
+        'Unable to send your message right now. Please try again later.',
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
   }
-}
 
   return (
     <section className="contact section" id="contact">
@@ -238,13 +236,13 @@ if (honeypot) {
               onSubmit={handleSubmit}
             >
               <input
-  type="text"
-  name="_gotcha"
-  tabIndex="-1"
-  autoComplete="off"
-  aria-hidden="true"
-  className="form-honeypot"
-/>
+                type="text"
+                name="_gotcha"
+                tabIndex="-1"
+                autoComplete="off"
+                aria-hidden="true"
+                className="form-honeypot"
+              />
               <div className="form-row">
                 <label>
                   <span>Your Name</span>
